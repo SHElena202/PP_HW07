@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Приветствуем Вас на проекте HASKER{% endblock %}
+
+{% block leftbody %}
+    <br>
+    <div class="row">
+        <div class="span4 offset6">
+            <ul class="nav nav-pills">
+                <li class="{{order_date}}">
+                    <a href="{% url 'questions:index' %}?order=date">Новые вопросы</a>
+                </li>
+                <li class="{{order_popular }}">
+                    <a href="{% url 'questions:index' %}?order=popular">Популярные вопросы</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <table class="table">
+        <tbody>
+          {% for item in object_list %}
+          <tr>
+              <td>
+                  <span class="label label-info">Количество голосов</span><br>
+                  <span class="badge badge-info">{{ item.count_votes }}</span>
+              </td>
+              <td>
+                  <span class="label label-info">Количество ответов</span><br>
+                  <span class="badge badge-info">{{ item.count_answers }}</span>
+              </td>
+              <td>
+                  <p><a href="{% url 'questions:questionview' item.id %}">{{ item.title }}</a></p>
+                  {% for tag in tem.tags.all %}
+                      <a href="?page={{ page_obj.number }}&tag={{ tag.name }}">
+                          <span class="label label-inverse">{{ tag.name }}</span>
+                      </a>
+                  {% endfor %}
+              </td>
+              <td>
+                  <p>{{ item.author.username }}</p>
+                  <p>Дата публикации: {{ item.create_date|date:"d.m.Y" }}</p>
+              </td>
+
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% include 'paginate.html' %}
+
+{% endblock %}

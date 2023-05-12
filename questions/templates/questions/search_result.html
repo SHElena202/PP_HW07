@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Результаты поиска{% endblock %}
+
+{% block leftbody %}
+    <br>
+    <h3>Результаты поиска</h3>
+    <table class="table">
+        <tbody>
+          {% for item in object_list %}
+          <tr>
+              <td>
+                  <span class="label label-info">Количество голосов</span><br>
+                  <span class="badge badge-info">{{ item.count_votes }}</span>
+              </td>
+              <td>
+                  <span class="label label-info">Количество ответов</span><br>
+                  <span class="badge badge-info">{{ item.count_answers }}</span>
+              </td>
+              <td>
+                  <p><a href="{% url 'questions:questionview' item.id %}">{{ item.title }}</a></p>
+                  {% for tag in item.tags.all %}
+                     <span class="label label-inverse">{{ tag.name }}</span>
+                  {% endfor %}
+              </td>
+              <td>
+                  <p>{{ item.author.username }}</p>
+                  <p>Дата публикации: {{ item.create_date|date:"d.m.Y" }}</p>
+              </td>
+
+          </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_paginated %}}
+        <div class="pagination pagination-centered">
+            <ul>
+                {% if page_obj.has_previous %}
+                    <li><a href="?search={{ search={{ search }}&page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                    <li class="disabled"><a>&laquo;</a></li>
+                {% endif %}
+
+                {% for i in paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <li class="active"><a>{{ i }}</a></li>
+                    {% else %}
+                        <li><a href="?search={{ search }}&page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li><a href="?search={{ search }}&page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                    <li class="disabled"><a>&raquo;</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}
